@@ -23,9 +23,9 @@ variable "org_name" {
 }
 
 variable "workload_name" {
-  description = "A name for the workload. It defaults to fd-cdn."
+  description = "A name for the workload. It defaults to linux-web-app."
   type        = string
-  default     = "fd-cdn"
+  default     = "linux-web-app"
 }
 
 variable "deploy_environment" {
@@ -38,7 +38,7 @@ variable "deploy_environment" {
 # RG Configuration   ##
 #######################
 
-variable "create_key_vault_resource_group" {
+variable "create_linux_app_service_resource_group" {
   description = "Controls if the resource group should be created. If set to false, the resource group name must be provided. Default is true."
   type        = bool
   default     = true
@@ -56,12 +56,18 @@ variable "use_location_short_name" {
   default     = true
 }
 
+variable "existing_resource_group_name" {
+  description = "The name of the existing resource group to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
+  type        = string
+  default     = null
+}
+
 #####################################
 # Private Endpoint Configuration   ##
 #####################################
 
 variable "enable_private_endpoint" {
-  description = "Manages a Private Endpoint to Azure Key Vault. Default is false."
+  description = "Manages a Private Endpoint to Azure Container Registry. Default is false."
   default     = false
 }
 
@@ -70,8 +76,19 @@ variable "existing_private_dns_zone" {
   default     = null
 }
 
-variable "existing_subnet_id" {
-  description = "ID of the existing subnet for the private endpoint"
+variable "private_subnet_address_prefix" {
+  description = "The name of the subnet for private endpoints"
+  default     = null
+}
+
+variable "create_private_endpoint_subnet" {
+  description = "Controls if the subnet should be created. If set to false, the subnet name must be provided. Default is false."
+  type        = bool
+  default     = false
+}
+
+variable "existing_private_subnet_name" {
+  description = "Name of the existing subnet for the private endpoint"
   default     = null
 }
 
@@ -81,8 +98,12 @@ variable "virtual_network_name" {
 }
 
 ###############################
-# App Service Configuration  ##
+# Linux Web Configuration   ##
 ###############################
+variable "service_plan_id" {
+  description = "ID of the Service Plan that hosts the App Service"
+  type        = string
+}
 
 variable "application_insights_sampling_percentage" {
   description = "Specifies the percentage of sampled datas for Application Insights. Documentation [here](https://docs.microsoft.com/en-us/azure/azure-monitor/app/sampling#ingestion-sampling)"
@@ -300,12 +321,29 @@ variable "staging_slot_custom_app_settings" {
   default     = null
 }
 
-variable "docker_image" {
-  description = "Docker image to use for this App Service"
+variable "app_service_logs" {
+  description = "Configuration of the App Service and App Service Slot logs. Documentation [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app#logs)"
   type = object({
-    name     = string
-    tag      = string
-    slot_tag = optional(string)
+    detailed_error_messages = optional(bool)
+    failed_request_tracing  = optional(bool)
+    application_logs = optional(object({
+      file_system_level = string
+      azure_blob_storage = optional(object({
+        level             = string
+        retention_in_days = number
+        sas_url           = string
+      }))
+    }))
+    http_logs = optional(object({
+      azure_blob_storage = optional(object({
+        retention_in_days = number
+        sas_url           = string
+      }))
+      file_system = optional(object({
+        retention_in_days = number
+        retention_in_mb   = number
+      }))
+    }))
   })
   default = null
 }
