@@ -6,7 +6,7 @@
 ####################################
 
 variable "enable_resource_locks" {
-  description = "(Optional) Enable resource locks"
+  description = "(Optional) Enable resource locks, default is false. If true, resource locks will be created for the resource group and the storage account."
   type        = bool
   default     = false
 }

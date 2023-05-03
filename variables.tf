@@ -1,53 +1,44 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+
 ###########################
 # Global Configuration   ##
 ###########################
 
+variable "location" {
+  description = "Azure region in which instance will be hosted"
+  type        = string
+}
+
 variable "environment" {
   description = "The Terraform backend environment e.g. public or usgovernment"
   type        = string
-  default     = null
 }
 
-variable "location" {
-  description = "The location/region to keep all your network resources. To get the list of all locations with table format from azure cli, run 'az account list-locations -o table'"
+variable "deploy_environment" {
+  description = "Name of the workload's environment"
+  type        = string
+}
+
+variable "workload_name" {
+  description = "Name of the workload_name"
   type        = string
 }
 
 variable "org_name" {
-  description = "A name for the organization. It defaults to anoa."
+  description = "Name of the organization"
   type        = string
-  default     = "anoa"
-}
-
-variable "workload_name" {
-  description = "A name for the workload. It defaults to fd-cdn."
-  type        = string
-  default     = "fd-cdn"
-}
-
-variable "deploy_environment" {
-  description = "The environment to deploy. It defaults to dev."
-  type        = string
-  default     = "dev"
 }
 
 #######################
 # RG Configuration   ##
 #######################
 
-variable "create_key_vault_resource_group" {
-  description = "Controls if the resource group should be created. If set to false, the resource group name must be provided. Default is true."
+variable "create_resource_group" {
+  description = "Controls if the resource group should be created. If set to false, the resource group name must be provided. Default is false."
   type        = bool
-  default     = true
-}
-
-variable "custom_resource_group_name" {
-  description = "The name of the custom resource group to create. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
-  type        = string
-  default     = null
+  default     = false
 }
 
 variable "use_location_short_name" {
@@ -56,256 +47,126 @@ variable "use_location_short_name" {
   default     = true
 }
 
-#####################################
-# Private Endpoint Configuration   ##
-#####################################
-
-variable "enable_private_endpoint" {
-  description = "Manages a Private Endpoint to Azure Key Vault. Default is false."
-  default     = false
-}
-
-variable "existing_private_dns_zone" {
-  description = "Name of the existing private DNS zone"
-  default     = null
-}
-
-variable "existing_subnet_id" {
-  description = "ID of the existing subnet for the private endpoint"
-  default     = null
-}
-
-variable "virtual_network_name" {
-  description = "Name of the virtual network for the private endpoint"
-  default     = null
-}
-
-###############################
-# App Service Configuration  ##
-###############################
-
-variable "application_insights_sampling_percentage" {
-  description = "Specifies the percentage of sampled datas for Application Insights. Documentation [here](https://docs.microsoft.com/en-us/azure/azure-monitor/app/sampling#ingestion-sampling)"
-  type        = number
-  default     = null
-}
-
-variable "application_insights_id" {
-  description = "ID of the existing Application Insights to use instead of deploying a new one."
+variable "existing_resource_group_name" {
+  description = "The name of the existing resource group to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
   type        = string
   default     = null
 }
 
-variable "application_insights_enabled" {
-  description = "Use Application Insights for this App Service"
+##############################
+# App Service Configuration ##
+##############################
+variable create_app_service_plan {
+  description = "Controls if the app service plan should be created. If set to false, the app service plan name must be provided. Default is true."
   type        = bool
   default     = true
 }
-
-variable "application_insights_type" {
-  description = "Application type for Application Insights resource"
+variable existing_app_service_plan_name {
+  description = "Name of the existing app service plan to use"
   type        = string
-  default     = "web"
-}
-
-variable "app_settings" {
-  description = "Application settings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#app_settings"
-  type        = map(string)
-  default     = {}
-}
-
-variable "site_config" {
-  description = "Site config for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#site_config. IP restriction attribute is no more managed in this block."
-  type        = any
-  default     = {}
-}
-
-variable "connection_strings" {
-  description = "Connection strings for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#connection_string"
-  type        = list(map(string))
-  default     = []
-}
-
-variable "sticky_settings" {
-  description = "Lists of connection strings and app settings to prevent from swapping between slots."
-  type = object({
-    app_setting_names       = optional(list(string))
-    connection_string_names = optional(list(string))
-  })
-  default = null
-}
-
-variable "authorized_ips" {
-  description = "IPs restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "authorized_subnet_ids" {
-  description = "Subnets restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "authorized_service_tags" {
-  description = "Service Tags restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "ip_restriction_headers" {
-  description = "IPs restriction headers for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#headers"
-  type        = map(list(string))
   default     = null
 }
-
-variable "scm_authorized_ips" {
-  description = "SCM IPs restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#scm_ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "scm_authorized_subnet_ids" {
-  description = "SCM subnets restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#scm_ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "scm_authorized_service_tags" {
-  description = "SCM Service Tags restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#scm_ip_restriction"
-  type        = list(string)
-  default     = []
-}
-
-variable "scm_ip_restriction_headers" {
-  description = "IPs restriction headers for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#headers"
-  type        = map(list(string))
+variable app_service_environment {
+  description = "The name of the app service environment to deploy to (Optional)"
+  type        = string
   default     = null
 }
-
-variable "client_affinity_enabled" {
-  description = "Client affinity activation for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#client_affinity_enabled"
-  type        = bool
-  default     = false
-}
-
-variable "https_only" {
-  description = "HTTPS restriction for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#https_only"
-  type        = bool
-  default     = false
-}
-
-variable "client_certificate_enabled" {
-  description = "Client certificate activation for App Service. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#client_certificate_enabled"
-  type        = bool
-  default     = false
-}
-
-# Backup options
-
-variable "backup_enabled" {
-  description = "`true` to enable App Service backup"
-  type        = bool
-  default     = false
-}
-
-variable "backup_frequency_interval" {
-  description = "Frequency interval for the App Service backup."
-  type        = number
-  default     = 1
-}
-
-variable "backup_retention_period_in_days" {
-  description = "Retention in days for the App Service backup."
-  type        = number
-  default     = 30
-}
-
-variable "backup_frequency_unit" {
-  description = "Frequency unit for the App Service backup. Possible values are `Day` or `Hour`."
+variable app_service_plan_os_type {
+  description = "The kind of the app service plan to deploy to (Optional)"
   type        = string
-  default     = "Day"
+  validation {
+    condition = contains(["Linux", "Windows", "WindowsContainer"], var.app_service_plan_os_type)
+    error_message = "Must be Windows, Linux, WindowsContainer"
+  }
+  default = "Windows"
 }
-
-variable "backup_keep_at_least_one_backup" {
-  description = "Should the service keep at least one backup, regardless of age of backup."
+variable app_service_resource_type {
+  description = "The resource type of the app service plan to deploy to (Optional)"
+  type        = string
+  validation {
+    condition = contains(["App", "FunctionApp"], var.app_service_resource_type)
+    error_message = "Must be App, FunctionApp"
+  }
+  default = "App"
+}
+variable app_service_name {
+  description = "The name of the app service to be deployed, if not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
+  type        = string
+  default     = null
+}
+variable app_service_plan_sku_name {
+  description = "Specifies the SKU for the plan"
+  type        = string
+  default     = null
+}
+variable health_check_path {
+  description = "Specifies the health check path for the app service"
+  type        = string
+  default     = null
+}
+variable application_stack {
+  description = "Specifies the application stack for the app service"
+  type        = string
+  default     = null
+}
+variable dotnet_version {
+  description = "Specifies the dotnet version for the app service"
+  type        = string
+  default     = null
+}
+variable dotnet_core_version {
+  description = "Specifies the dotnet core version for the app service"
+  type        = string
+  default     = null
+}
+variable java_version {
+  description = "Specifies the java version for the app service"
+  type        = string
+  default     = null
+}
+variable deployment_slot_count {
+  description = "Specifies the number of deployment slots for the app service"
+  type        = number
+  default     = 0
+}
+variable create_app_storage_account {
+  description = "Controls if the storage account should be created. Default is true."
+  type        = bool
+  default     = true
+  }
+variable app_storage_account_name {
+  description = "Name of an existing storage account to use with the app"
+  type        = string
+  default     = null
+}
+#######################################
+# KeyVault Configuration              #
+#######################################
+variable create_app_keyvault {
+  description = "Controls if the keyvault should be created. Default is true."
   type        = bool
   default     = true
 }
-
-variable "backup_storage_account_rg" {
-  description = "Storage account resource group to use if App Service backup is enabled."
+variable virtual_network_name {
+  description = "The name of the virtual network to deploy KeyVault to (Optional)"
   type        = string
   default     = null
 }
-
-variable "backup_storage_account_name" {
-  description = "Storage account name to use if App Service backup is enabled."
+variable private_endpoint_subnet_name {
+  description = "The name of the private endpoint subnet to deploy KeyVault to (Optional)"
   type        = string
   default     = null
 }
-
-variable "backup_storage_account_container" {
-  description = "Name of the container in the Storage Account if App Service backup is enabled"
-  type        = string
-  default     = "webapps"
-}
-
-variable "mount_points" {
-  description = "Storage Account mount points. Name is generated if not set and default type is AzureFiles. See https://www.terraform.io/docs/providers/azurerm/r/app_service.html#storage_account"
-  type        = list(map(string))
-  default     = []
-}
-
-variable "auth_settings" {
-  description = "Authentication settings. Issuer URL is generated thanks to the tenant ID. For active_directory block, the allowed_audiences list is filled with a value generated with the name of the App Service. See https://www.terraform.io/docs/providers/azurerm/r/app_service.html#auth_settings"
-  type        = any
-  default     = {}
-}
-
-variable "custom_domains" {
-  description = <<EOD
-Custom domains and SSL certificates of the App Service. Could declare a custom domain with SSL binding. SSL certificate could be provided from an Azure Keyvault Certificate Secret or from a file with following attributes :
-```
-- certificate_file:                     Path of the certificate file.
-- certificate_password:                 Certificate password.
-- certificate_keyvault_certificate_id:  ID of the Azure Keyvault Certificate Secret.
-- certificate_id:                       ID of an existant certificate.
-```
-EOD
-  type = map(object({
-    certificate_file                    = optional(string)
-    certificate_password                = optional(string)
-    certificate_keyvault_certificate_id = optional(string)
-    certificate_id                      = optional(string)
-  }))
-  default = null
-}
-
-variable "app_service_vnet_integration_subnet_id" {
-  description = "Id of the subnet to associate with the app service"
-  type        = string
-  default     = null
-}
-
-variable "staging_slot_enabled" {
+#######################################
+# Application Insights Configuration              #
+#######################################
+variable enable_application_insights {
+  description = "Controls if the application insights should be created. Default is true."
   type        = bool
-  description = "Create a staging slot alongside the app service for blue/green deployment purposes. See documentation https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_slot"
   default     = true
 }
-
-variable "staging_slot_custom_app_settings" {
-  type        = map(string)
-  description = "Override staging slot with custom app settings"
+variable log_analytics_workspace_id {
+  description = "The name of the log analytics workspace to deploy application insights to (Optional)"
+  type        = string
   default     = null
-}
-
-variable "docker_image" {
-  description = "Docker image to use for this App Service"
-  type = object({
-    name     = string
-    tag      = string
-    slot_tag = optional(string)
-  })
-  default = null
 }
