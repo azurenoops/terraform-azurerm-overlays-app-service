@@ -1,5 +1,7 @@
 # Changelog
 
+## [v1.0.1](https://github.com/azurenoops/terraform-azurerm-overlays-app-service/tree/v1.0.1) (2023-05-03)
+
 ## [v1.0.0](https://github.com/azurenoops/terraform-azurerm-overlays-app-service/tree/v1.0.0) (2023-05-03)
 
 
