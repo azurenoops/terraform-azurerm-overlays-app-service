@@ -139,6 +139,11 @@ variable app_storage_account_name {
   type        = string
   default     = null
 }
+variable use_32_bit_worker {
+  description = "Use 32 bit worker for the app service"
+  type        = bool
+  default     = false
+}
 #######################################
 # KeyVault Configuration              #
 #######################################

@@ -17,7 +17,7 @@ resource "azurerm_windows_function_app" "func" {
   site_config {
     always_on         = true
     health_check_path = var.health_check_path
-
+    use_32_bit_worker = var.use_32_bit_worker
     application_stack {
       dotnet_version = var.dotnet_version
     }
