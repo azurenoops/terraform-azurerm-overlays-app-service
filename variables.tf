@@ -532,7 +532,7 @@ variable "existing_private_dns_zone" {
 }
 
 #######################################
-# Application Insights Configuration              #
+# Application Insights Configuration  #
 #######################################
 variable "enable_application_insights" {
   description = "Controls if the application insights should be created. Default is true."
