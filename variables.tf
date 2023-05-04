@@ -162,6 +162,19 @@ variable private_endpoint_subnet_name {
   type        = string
   default     = null
 }
+
+variable "enable_private_endpoint" {
+  description = "Controls if the private endpoint should be created. Default is false."
+  type        = bool
+  default     = false
+}
+
+variable "existing_private_dns_zone" {
+  description = "The id of the existing dns zone to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
+  type        = string
+  default     = null
+}
+   
 #######################################
 # Application Insights Configuration              #
 #######################################
