@@ -1,6 +1,6 @@
 module "overlays-storage-account" {
   source               = "azurenoops/overlays-storage-account/azurerm"
-  version              = "~> 0.1.0"
+  version              = ">= 0.1.0"
   count                = var.create_app_storage_account && var.app_storage_account_name == null ? 1 : 0
   location             = local.location
   resource_group_name  = local.resource_group_name

@@ -3,7 +3,7 @@ module "mod_key_vault" {
     azurerm_user_assigned_identity.app_identity
   ]
   source                       = "azurenoops/overlays-key-vault/azurerm"
-  version                      = "~> 1.0.0"
+  version                      = ">= 1.0.0"
   count                        = var.create_app_keyvault ? 1 : 0
   existing_resource_group_name = local.resource_group_name
   location                     = local.location
