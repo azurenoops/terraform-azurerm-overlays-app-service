@@ -544,3 +544,43 @@ variable "log_analytics_workspace_id" {
   type        = string
   default     = null
 }
+
+#######################################
+# Azure Container Registry            #
+#######################################
+variable "create_app_container_registry" {
+  description = "Controls if the ACR should be created. Default is true."
+  type        = bool
+  default     = false
+}
+
+variable "acr_sku" {
+  description = "The SKU of the Azure Container Registry"
+  type        = string
+  default     = "Standard"
+}
+variable "acr_enable_private_endpoint" {
+  description = "Controls if the private endpoint should be created. Default is false."
+  type        = bool
+  default     = true
+}
+variable "acr_existing_dns_zone" {
+  description = "The name of the existing DNS Zone to deploy the ACR private endpoint to (Optional)"
+  type        = string
+  default     = null
+}
+variable "acr_create_dns_zone" {
+  description = "Controls if the DNS Zone should be created. Default is true."
+  type        = bool
+  default     = true
+}
+variable "acr_existing_private_dns_zone" {
+  description = "The id of the existing private DNS Zone to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
+  type        = string
+  default     = null
+}
+variable "acr_public_network_access_enabled" {
+  description = "Controls if the ACR should be accessible from the public internet. Default is false."
+  type        = bool
+  default     = false
+}
