@@ -16,7 +16,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
     api_management_api_id = var.linux_app_site_config.api_management_api_id
     app_command_line      = var.linux_app_site_config.app_command_line
     application_stack {
-      docker_image        = var.linux_app_site_config.application_stack.docker_image
+      docker_image        = var.linux_app_site_config.application_stack.docker_image == null ? null : "${module.mod_container_registry.0.login_server}/${var.linux_app_site_config.application_stack.docker_image}"
       docker_image_tag    = var.linux_app_site_config.application_stack.docker_image_tag
       dotnet_version      = var.linux_app_site_config.application_stack.dotnet_version
       go_version          = var.linux_app_site_config.application_stack.go_version
@@ -28,7 +28,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
       python_version      = var.linux_app_site_config.application_stack.python_version
       ruby_version        = var.linux_app_site_config.application_stack.ruby_version
     }
-    container_registry_managed_identity_client_id = var.linux_app_site_config.container_registry_managed_identity_client_id
+    container_registry_managed_identity_client_id = var.linux_app_site_config.container_registry_use_managed_identity == true ? data.azurerm_user_assigned_identity.app_identity.principal_id : null
     container_registry_use_managed_identity       = var.linux_app_site_config.container_registry_use_managed_identity
     cors {
       allowed_origins     = var.linux_app_site_config.cors == null ? null : var.linux_app_site_config.cors.allowed_origins
@@ -53,6 +53,11 @@ resource "azurerm_linux_web_app" "linuxapp" {
     vnet_route_all_enabled      = var.linux_app_site_config.vnet_route_all_enabled
     websockets_enabled          = var.linux_app_site_config.websockets_enabled
     worker_count                = var.linux_app_site_config.worker_count
+  }
+  app_settings = {
+    APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.app_service_app_insights[0].instrumentation_key
+    APPINSIGHTS_CONNECTION_STRING  = azurerm_application_insights.app_service_app_insights[0].connection_string
+    WEBSITE_RUN_FROM_PACKAGE = var.website_run_from_package
   }
 }
 resource "azurerm_linux_web_app_slot" "slot" {

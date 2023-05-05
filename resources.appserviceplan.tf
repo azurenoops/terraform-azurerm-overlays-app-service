@@ -7,5 +7,6 @@ resource "azurerm_service_plan" "asp" {
   app_service_environment_id = var.app_service_environment == null ? null : data.azurerm_app_service_environment_v3.ase.0.id
 
   sku_name = var.app_service_plan_sku_name
-   tags = merge(var.add_tags, local.default_tags)
+  worker_count = var.app_service_plan_worker_count
+  tags     = merge(var.add_tags, local.default_tags) 
 }

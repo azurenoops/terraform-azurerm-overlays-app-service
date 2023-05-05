@@ -99,31 +99,12 @@ variable "app_service_plan_sku_name" {
   type        = string
   default     = null
 }
-variable "health_check_path" {
-  description = "Specifies the health check path for the app service"
-  type        = string
-  default     = null
+variable "app_service_plan_worker_count" {
+  description = "Specifies the number of workers associated with this App Service Plan"
+  type        = number
+  default     = 1
 }
-variable "application_stack" {
-  description = "Specifies the application stack for the app service"
-  type        = string
-  default     = null
-}
-variable "dotnet_version" {
-  description = "Specifies the dotnet version for the app service"
-  type        = string
-  default     = null
-}
-variable "dotnet_core_version" {
-  description = "Specifies the dotnet core version for the app service"
-  type        = string
-  default     = null
-}
-variable "java_version" {
-  description = "Specifies the java version for the app service"
-  type        = string
-  default     = null
-}
+
 variable "deployment_slot_count" {
   description = "Specifies the number of deployment slots for the app service"
   type        = number
@@ -196,7 +177,6 @@ variable "windows_app_site_config" {
         }))
       })
     }))
-    container_registry_managed_identity_client_id = optional(string)
     container_registry_use_managed_identity       = optional(bool)
     cors = optional(object({
       allowed_origins     = list(string)
@@ -362,7 +342,6 @@ variable "linux_app_site_config" {
       python_version      = optional(string)
       ruby_version        = optional(string)
     }))
-    container_registry_managed_identity_client_id = optional(string)
     container_registry_use_managed_identity       = optional(bool)
     cors = optional(object({
       allowed_origins     = list(string)
@@ -444,7 +423,6 @@ variable "linux_function_app_site_config" {
       disk_quota_mb         = optional(number)
       retention_period_days = optional(number)
     }))
-    container_registry_managed_identity_client_id = optional(string)
     container_registry_use_managed_identity       = optional(bool)
     cors = optional(object({
       allowed_origins     = list(string)
@@ -498,6 +476,11 @@ variable "linux_function_app_site_config" {
     websockets_enabled          = optional(bool)
     worker_count                = optional(number)
   })
+  default = null
+}
+variable website_run_from_package {
+  type = string
+  description = "Allows your apps to run from a deployment ZIP package file. You can enable this with a setting of 1, or a URL to a package path"
   default = null
 }
 #######################################
@@ -557,7 +540,7 @@ variable "create_app_container_registry" {
 variable "acr_sku" {
   description = "The SKU of the Azure Container Registry"
   type        = string
-  default     = "Standard"
+  default     = "Premium"
 }
 variable "acr_enable_private_endpoint" {
   description = "Controls if the private endpoint should be created. Default is false."

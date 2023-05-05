@@ -19,7 +19,7 @@ resource "azurerm_windows_web_app" "appService" {
     application_stack {
       current_stack                = var.windows_app_site_config.application_stack.current_stack
       docker_container_name        = var.windows_app_site_config.application_stack.docker_container_name
-      docker_container_registry    = var.windows_app_site_config.application_stack.docker_container_registry
+      docker_container_registry    = var.create_app_container_registry ? module.mod_container_registry.0.login_server : var.windows_app_site_config.application_stack.docker_container_registry 
       docker_container_tag         = var.windows_app_site_config.application_stack.docker_container_tag
       dotnet_version               = var.windows_app_site_config.application_stack.dotnet_version
       dotnet_core_version          = var.windows_app_site_config.application_stack.dotnet_core_version
@@ -30,7 +30,7 @@ resource "azurerm_windows_web_app" "appService" {
       php_version                  = var.windows_app_site_config.application_stack.php_version
       python                       = var.windows_app_site_config.application_stack.python
     }
-    container_registry_managed_identity_client_id = var.windows_app_site_config.container_registry_managed_identity_client_id
+    container_registry_managed_identity_client_id = var.windows_app_site_config.container_registry_use_managed_identity == true ? data.azurerm_user_assigned_identity.app_identity.principal_id : null
     container_registry_use_managed_identity       = var.windows_app_site_config.container_registry_use_managed_identity
     cors {
       allowed_origins     = var.windows_app_site_config.cors == null ? null : var.windows_app_site_config.cors.allowed_origins
@@ -61,6 +61,7 @@ resource "azurerm_windows_web_app" "appService" {
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.app_service_app_insights[0].instrumentation_key
     APPINSIGHTS_CONNECTION_STRING  = azurerm_application_insights.app_service_app_insights[0].connection_string
+    WEBSITE_RUN_FROM_PACKAGE = var.website_run_from_package
   }
 
   identity {

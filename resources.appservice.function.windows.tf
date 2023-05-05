@@ -62,6 +62,7 @@ resource "azurerm_windows_function_app" "func" {
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.app_service_app_insights[0].instrumentation_key
     APPINSIGHTS_CONNECTION_STRING  = azurerm_application_insights.app_service_app_insights[0].connection_string
+    WEBSITE_RUN_FROM_PACKAGE       = var.website_run_from_package
   }
 
   identity {

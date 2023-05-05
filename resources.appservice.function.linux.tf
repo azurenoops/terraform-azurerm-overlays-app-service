@@ -42,10 +42,10 @@ resource "azurerm_linux_function_app" "func" {
       use_custom_runtime          = var.linux_function_app_site_config.application_stack.use_custom_runtime
     }
     app_service_logs {
-      disk_quota_mb         = var.windows_function_app_site_config.app_service_logs == null ? null : var.windows_function_app_site_config.app_service_logs.disk_quota_mb
-      retention_period_days = var.windows_function_app_site_config.app_service_logs == null ? null : var.windows_function_app_site_config.app_service_logs.retention_period_days
+      disk_quota_mb         = var.linux_function_app_site_config.app_service_logs == null ? null : var.linux_function_app_site_config.app_service_logs.disk_quota_mb
+      retention_period_days = var.linux_function_app_site_config.app_service_logs == null ? null : var.linux_function_app_site_config.app_service_logs.retention_period_days
     }
-    container_registry_managed_identity_client_id = var.linux_function_app_site_config.container_registry_managed_identity_client_id
+    container_registry_managed_identity_client_id = var.linux_function_app_site_config.application_stack.docker == null ? null : "${module.mod_container_registry.login_server}/${var.linux_function_app_site_config.application_stack.docker_image}"
     container_registry_use_managed_identity       = var.linux_function_app_site_config.container_registry_use_managed_identity
     cors {
       allowed_origins     = var.linux_function_app_site_config.cors == null ? null : var.linux_function_app_site_config.cors.allowed_origins
@@ -76,6 +76,7 @@ resource "azurerm_linux_function_app" "func" {
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.app_service_app_insights[0].instrumentation_key
     APPINSIGHTS_CONNECTION_STRING  = azurerm_application_insights.app_service_app_insights[0].connection_string
+    WEBSITE_RUN_FROM_PACKAGE       = var.website_run_from_package
   }
 
   identity {
