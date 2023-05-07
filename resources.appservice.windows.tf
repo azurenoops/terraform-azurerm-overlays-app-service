@@ -78,7 +78,7 @@ resource "azurerm_windows_web_app_slot" "slot" {
     azurerm_windows_web_app.appService
   ]
   count          = var.app_service_plan_os_type == "Windows" && var.app_service_resource_type == "App" ? var.deployment_slot_count : 0
-  name           = var.deployment_slot_count == 1 ? "${local.app_service_name}-slot1" : "${local.app_service_name}-slot-${count.index + 1}"
+  name           = var.deployment_slot_count == 1 ? "${local.app_service_name}-slot-1" : "${local.app_service_name}-slot-${count.index + 1}"
   app_service_id = azurerm_windows_web_app.appService[0].id
 
   site_config {}

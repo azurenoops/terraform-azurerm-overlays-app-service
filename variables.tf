@@ -532,13 +532,13 @@ variable "log_analytics_workspace_id" {
 # Azure Container Registry            #
 #######################################
 variable "create_app_container_registry" {
-  description = "Controls if the ACR should be created. Default is true."
+  description = "Controls if the ACR should be created. Default is false."
   type        = bool
   default     = false
 }
 
 variable "acr_sku" {
-  description = "The SKU of the Azure Container Registry"
+  description = "The SKU of the Azure Container Registry. Possible values are Basic, Standard and Premium. Defaults to Premium."
   type        = string
   default     = "Premium"
 }
