@@ -65,7 +65,7 @@ resource "azurerm_linux_web_app_slot" "slot" {
     azurerm_linux_web_app.linuxapp
   ]
   count          = var.app_service_plan_os_type == "Linux" && var.app_service_resource_type == "App" ? var.deployment_slot_count : 0
-  name           = var.deployment_slot_count == 1 ? "${local.app_service_name}-slot1" : "${local.app_service_name}-slot-${count.index + 1}"
+  name           = "${local.app_service_name}-slot-${count.index + 1}"
   app_service_id = azurerm_linux_web_app.linuxapp[0].id
 
   site_config {}
