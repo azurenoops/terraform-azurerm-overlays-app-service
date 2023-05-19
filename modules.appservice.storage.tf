@@ -9,5 +9,5 @@ module "overlays-storage-account" {
   workload_name                = var.workload_name
   org_name                     = var.org_name
   virtual_network_name         = var.virtual_network_name
-  existing_subnet_id           = data.azurerm_subnet.pe_subnet.address_prefixes[0]
+  existing_subnet_id           = data.azurerm_subnet.pe_subnet.id
 }
