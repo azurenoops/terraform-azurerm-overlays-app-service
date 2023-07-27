@@ -1,7 +1,7 @@
 module "mod_storage_account" {
   source                       = "azurenoops/overlays-storage-account/azurerm"
   version                      = "~> 1.0"
-  count                        = var.app_storage_account_name != null ? 1 : 0
+  count                        = var.app_service_resource_type == "FunctionApp" ? 1 : 0
   location                     = local.location
   existing_resource_group_name = local.resource_group_name
   environment                  = var.environment
