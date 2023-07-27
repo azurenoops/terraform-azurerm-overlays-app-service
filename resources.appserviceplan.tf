@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 resource "azurerm_service_plan" "asp" {
   count                      = var.create_app_service_plan ? 1 : 0
   name                       = local.app_service_plan_name
