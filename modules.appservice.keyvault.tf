@@ -3,7 +3,7 @@ module "mod_key_vault" {
     azurerm_user_assigned_identity.app_identity
   ]
   source                       = "azurenoops/overlays-key-vault/azurerm"
-  version                      = ">= 1.0.0"
+  version                      = "~> 1.0"
   count                        = var.create_app_keyvault ? 1 : 0
   existing_resource_group_name = local.resource_group_name
   location                     = local.location
@@ -29,21 +29,20 @@ module "mod_key_vault" {
 
   # Creating Private Endpoint requires, VNet name to create a Private Endpoint
   # By default this will create a `privatelink.vaultcore.azure.net` DNS zone. if created in commercial cloud
-  # To use existing subnet, specify `existing_subnet_id` with valid subnet id. 
-  # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name
-  # Private endpoints doesn't work If not using `existing_subnet_id` to create redis inside a specified VNet.
-  enable_private_endpoint       = var.enable_private_endpoint
-  virtual_network_name          = var.virtual_network_name
-  private_subnet_address_prefix = data.azurerm_subnet.pe_subnet.address_prefixes[0]
-  existing_private_dns_zone     = var.existing_private_dns_zone
-  existing_subnet_id            = data.azurerm_subnet.pe_subnet.id
+  # To use existing subnet, specify `existing_private_subnet_name` with valid subnet name. 
+  # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name.
+  enable_private_endpoint       = var.enable_keyvault_private_endpoint
+  virtual_network_name          = data.azurerm_virtual_network.pe_vnet.name  
+  existing_private_dns_zone     = var.existing_keyvault_private_dns_zone
+  existing_private_subnet_name  = data.azurerm_subnet.pe_subnet.name
+  
   # Current user should be here to be able to create keys and secrets
   #admin_objects_ids = [
   #  data.azuread_group.admin_group.id
   #]
 
   # This is to enable resource locks for the key vault. 
-  enable_resource_locks = false
+  enable_resource_locks = var.enable_resource_locks
 
   # Tags for Azure Resources
   add_tags = merge(var.add_tags, local.default_tags)
