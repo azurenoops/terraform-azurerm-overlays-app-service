@@ -5,8 +5,8 @@
 data "azurerm_client_config" "current" {}
 
 data "azurerm_app_service_environment_v3" "ase" {
-  count               = var.app_service_environment == null ? 0 : 1
-  name                = var.app_service_environment
+  count               = var.enable_app_service_environment ? 1 : 0
+  name                = var.app_service_environment_name
   resource_group_name = local.resource_group_name
 }
 

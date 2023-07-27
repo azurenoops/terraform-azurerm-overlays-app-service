@@ -1,6 +1,22 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+###########################
+# ASE Configuration      ##
+###########################
+
+variable "enable_app_service_environment" {
+  description = "Controls if the app service environment should be enabled. Default is false."
+  type        = bool
+  default     = false
+}
+
+variable "app_service_environment_name" {
+  description = "Name of the app service environment to use"
+  type        = string
+  default     = null
+}
+
 ##############################
 # App Service Configuration ##
 ##############################
