@@ -2,18 +2,19 @@ resource "azurerm_linux_function_app" "func" {
   depends_on = [
     azurerm_service_plan.asp,
     azurerm_application_insights.app_service_app_insights,
-    module.overlays-storage-account
+    module.mod_storage_account
   ]
   count               = var.app_service_plan_os_type == "Linux" && var.app_service_resource_type == "FunctionApp" ? 1 : 0
   name                = local.app_service_name
   resource_group_name = local.resource_group_name
   location            = local.location
 
-  storage_account_name       = module.overlays-storage-account.0.storage_account_name
-  storage_account_access_key = data.azurerm_storage_account.sa.primary_access_key
-  service_plan_id            = data.azurerm_service_plan.asp.id
+  storage_account_name       = module.mod_storage_account.0.storage_account_name
+  storage_account_access_key = module.mod_storage_account.0.primary_access_key
+  service_plan_id            = azurerm_service_plan.asp.id
 
   key_vault_reference_identity_id = data.azurerm_user_assigned_identity.app_identity.id
+
   site_config {
     always_on                              = var.linux_function_app_site_config.always_on
     api_definition_url                     = var.linux_function_app_site_config.api_definition_url
@@ -94,7 +95,7 @@ resource "azurerm_linux_function_app_slot" "slot" {
   count                = var.app_service_plan_os_type == "Linux" && var.app_service_resource_type == "FunctionApp" ? var.deployment_slot_count : 0
   name                 = "${local.app_service_name}-slot-${count.index + 1}"
   function_app_id      = azurerm_linux_function_app.func[0].id
-  storage_account_name = module.overlays-storage-account.0.storage_account_name
+  storage_account_name = module.mod_storage_account.0.storage_account_name
 
   site_config {}
 }

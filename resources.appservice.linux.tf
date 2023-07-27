@@ -1,6 +1,6 @@
 resource "azurerm_linux_web_app" "linuxapp" {
   depends_on = [
-    data.azurerm_service_plan.asp,
+    azurerm_service_plan.asp,
     azurerm_application_insights.app_service_app_insights,
     data.azurerm_user_assigned_identity.app_identity
   ]
@@ -8,7 +8,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
   name                = local.app_service_name
   resource_group_name = local.resource_group_name
   location            = local.location
-  service_plan_id     = data.azurerm_service_plan.asp.id
+  service_plan_id     = azurerm_service_plan.asp.id
 
   site_config {
     always_on             = var.linux_app_site_config.always_on
