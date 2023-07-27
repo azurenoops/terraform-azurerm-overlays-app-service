@@ -1,58 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-
-###########################
-# Global Configuration   ##
-###########################
-
-variable "location" {
-  description = "Azure region in which instance will be hosted"
-  type        = string
-}
-
-variable "environment" {
-  description = "The Terraform backend environment e.g. public or usgovernment"
-  type        = string
-}
-
-variable "deploy_environment" {
-  description = "Name of the workload's environment"
-  type        = string
-}
-
-variable "workload_name" {
-  description = "Name of the workload_name"
-  type        = string
-}
-
-variable "org_name" {
-  description = "Name of the organization"
-  type        = string
-}
-
-#######################
-# RG Configuration   ##
-#######################
-
-variable "create_resource_group" {
-  description = "Controls if the resource group should be created. If set to false, the resource group name must be provided. Default is false."
-  type        = bool
-  default     = false
-}
-
-variable "use_location_short_name" {
-  description = "Use short location name for resources naming (ie eastus -> eus). Default is true. If set to false, the full cli location name will be used. if custom naming is set, this variable will be ignored."
-  type        = bool
-  default     = true
-}
-
-variable "existing_resource_group_name" {
-  description = "The name of the existing resource group to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
-  type        = string
-  default     = null
-}
-
 ##############################
 # App Service Configuration ##
 ##############################
@@ -61,6 +9,7 @@ variable "create_app_service_plan" {
   type        = bool
   default     = true
 }
+
 variable "existing_app_service_plan_name" {
   description = "Name of the existing app service plan to use"
   type        = string
@@ -71,6 +20,7 @@ variable "app_service_environment" {
   type        = string
   default     = null
 }
+
 variable "app_service_plan_os_type" {
   description = "The kind of the app service plan to deploy to (Optional)"
   type        = string
@@ -80,6 +30,7 @@ variable "app_service_plan_os_type" {
   }
   default = "Windows"
 }
+
 variable "app_service_resource_type" {
   description = "The resource type of the app service plan to deploy to (Optional)"
   type        = string
@@ -89,16 +40,19 @@ variable "app_service_resource_type" {
   }
   default = "App"
 }
+
 variable "app_service_name" {
   description = "The name of the app service to be deployed, if not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
   type        = string
   default     = null
 }
+
 variable "app_service_plan_sku_name" {
   description = "Specifies the SKU for the plan"
   type        = string
   default     = null
 }
+
 variable "app_service_plan_worker_count" {
   description = "Specifies the number of workers associated with this App Service Plan"
   type        = number
@@ -110,16 +64,13 @@ variable "deployment_slot_count" {
   type        = number
   default     = 0
 }
+
 variable "create_app_storage_account" {
   description = "Controls if the storage account should be created. Default is true."
   type        = bool
   default     = true
 }
-variable "app_storage_account_name" {
-  description = "Name of an existing storage account to use with the app"
-  type        = string
-  default     = null
-}
+
 variable "use_32_bit_worker" {
   description = "Use 32 bit worker for the app service"
   type        = bool
@@ -483,36 +434,6 @@ variable website_run_from_package {
   description = "Allows your apps to run from a deployment ZIP package file. You can enable this with a setting of 1, or a URL to a package path"
   default = null
 }
-#######################################
-# KeyVault Configuration              #
-#######################################
-variable "create_app_keyvault" {
-  description = "Controls if the keyvault should be created. Default is true."
-  type        = bool
-  default     = true
-}
-variable "virtual_network_name" {
-  description = "The name of the virtual network to deploy KeyVault to (Optional)"
-  type        = string
-  default     = null
-}
-variable "private_endpoint_subnet_name" {
-  description = "The name of the private endpoint subnet to deploy KeyVault to (Optional)"
-  type        = string
-  default     = null
-}
-
-variable "enable_private_endpoint" {
-  description = "Controls if the private endpoint should be created. Default is false."
-  type        = bool
-  default     = false
-}
-
-variable "existing_private_dns_zone" {
-  description = "The id of the existing dns zone to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
-  type        = string
-  default     = null
-}
 
 #######################################
 # Application Insights Configuration  #
@@ -526,44 +447,4 @@ variable "log_analytics_workspace_id" {
   description = "The name of the log analytics workspace to deploy application insights to (Optional)"
   type        = string
   default     = null
-}
-
-#######################################
-# Azure Container Registry            #
-#######################################
-variable "create_app_container_registry" {
-  description = "Controls if the ACR should be created. Default is false."
-  type        = bool
-  default     = false
-}
-
-variable "acr_sku" {
-  description = "The SKU of the Azure Container Registry. Possible values are Basic, Standard and Premium. Defaults to Premium."
-  type        = string
-  default     = "Premium"
-}
-variable "acr_enable_private_endpoint" {
-  description = "Controls if the private endpoint should be created. Default is false."
-  type        = bool
-  default     = true
-}
-variable "acr_existing_dns_zone" {
-  description = "The name of the existing DNS Zone to deploy the ACR private endpoint to (Optional)"
-  type        = string
-  default     = null
-}
-variable "acr_create_dns_zone" {
-  description = "Controls if the DNS Zone should be created. Default is true."
-  type        = bool
-  default     = true
-}
-variable "acr_existing_private_dns_zone" {
-  description = "The id of the existing private DNS Zone to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
-  type        = string
-  default     = null
-}
-variable "acr_public_network_access_enabled" {
-  description = "Controls if the ACR should be accessible from the public internet. Default is false."
-  type        = bool
-  default     = false
 }
