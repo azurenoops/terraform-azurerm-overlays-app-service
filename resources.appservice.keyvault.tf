@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 resource "azurerm_key_vault_access_policy" "app_access_policy" {
   depends_on = [
     module.mod_key_vault,

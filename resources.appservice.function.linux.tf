@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 resource "azurerm_linux_function_app" "func" {
   depends_on = [
     azurerm_service_plan.asp,

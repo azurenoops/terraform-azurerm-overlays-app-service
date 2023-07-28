@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 resource "azurerm_windows_web_app" "appService" {
   depends_on = [
     azurerm_service_plan.asp,

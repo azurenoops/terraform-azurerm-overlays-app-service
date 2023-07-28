@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 module "mod_key_vault" {
   depends_on = [
     azurerm_user_assigned_identity.app_identity
@@ -31,9 +34,9 @@ module "mod_key_vault" {
   # By default this will create a `privatelink.vaultcore.azure.net` DNS zone. if created in commercial cloud
   # To use existing subnet, specify `existing_private_subnet_name` with valid subnet name. 
   # To use existing private DNS zone specify `existing_private_dns_zone` with valid zone name.
-  enable_private_endpoint       = var.enable_keyvault_private_endpoint
+  enable_private_endpoint       = var.create_app_keyvault
   virtual_network_name          = data.azurerm_virtual_network.pe_vnet.name  
-  existing_private_dns_zone     = var.existing_keyvault_private_dns_zone
+  existing_private_dns_zone     = var.existing_keyvault_private_dns_zone != null ? var.existing_keyvault_private_dns_zone : null
   existing_private_subnet_name  = data.azurerm_subnet.pe_subnet.name
   
   # Current user should be here to be able to create keys and secrets

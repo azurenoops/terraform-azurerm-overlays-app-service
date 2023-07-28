@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 module "mod_container_registry" {
   source                       = "azurenoops/overlays-container-registry/azurerm"
   version                      = "~> 1.0"
