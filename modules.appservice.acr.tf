@@ -3,7 +3,7 @@
 
 module "mod_container_registry" {
   source                       = "azurenoops/overlays-container-registry/azurerm"
-  version                      = "~> 1.0"
+  version                      = "~> 2.0"
   count                        = var.create_app_container_registry ? 1 : 0
   existing_resource_group_name = local.resource_group_name
   location                     = local.location
