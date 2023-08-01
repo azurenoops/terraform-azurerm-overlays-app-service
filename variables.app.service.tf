@@ -31,11 +31,6 @@ variable "existing_app_service_plan_name" {
   type        = string
   default     = null
 }
-variable "app_service_environment" {
-  description = "The name of the app service environment to deploy to (Optional)"
-  type        = string
-  default     = null
-}
 
 variable "app_service_plan_os_type" {
   description = "The kind of the app service plan to deploy to (Optional)"
@@ -55,12 +50,6 @@ variable "app_service_resource_type" {
     error_message = "Must be App, FunctionApp"
   }
   default = "App"
-}
-
-variable "app_service_name" {
-  description = "The name of the app service to be deployed, if not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
-  type        = string
-  default     = null
 }
 
 variable "app_service_plan_sku_name" {
@@ -92,6 +81,7 @@ variable "use_32_bit_worker" {
   type        = bool
   default     = false
 }
+
 variable "windows_app_site_config" {
   type = object({
     always_on             = optional(bool)
@@ -206,6 +196,7 @@ variable "windows_app_site_config" {
   })
   default = null
 }
+
 variable "windows_function_app_site_config" {
   type = object({
     always_on                              = optional(bool)
@@ -290,6 +281,7 @@ variable "windows_function_app_site_config" {
   })
   default = null
 }
+
 variable "linux_app_site_config" {
   type = object({
     always_on             = optional(bool)
@@ -362,6 +354,7 @@ variable "linux_app_site_config" {
   })
   default = null
 }
+
 variable "linux_function_app_site_config" {
   type = object({
     always_on                              = optional(bool)
@@ -445,6 +438,7 @@ variable "linux_function_app_site_config" {
   })
   default = null
 }
+
 variable website_run_from_package {
   type = string
   description = "Allows your apps to run from a deployment ZIP package file. You can enable this with a setting of 1, or a URL to a package path"
@@ -459,6 +453,7 @@ variable "enable_application_insights" {
   type        = bool
   default     = true
 }
+
 variable "log_analytics_workspace_id" {
   description = "The name of the log analytics workspace to deploy application insights to (Optional)"
   type        = string

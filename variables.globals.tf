@@ -35,7 +35,7 @@ variable "org_name" {
 # RG Configuration   ##
 #######################
 
-variable "create_resource_group" {
+variable "create_app_resource_group" {
   description = "Controls if the resource group should be created. If set to false, the resource group name must be provided. Default is false."
   type        = bool
   default     = false
@@ -59,6 +59,12 @@ variable "existing_resource_group_name" {
 
 variable "virtual_network_name" {
   description = "The name of the virtual network of the private endpoint"
+  type        = string
+  default     = null
+}
+
+variable "private_endpoint_subnet_name" {
+  description = "The name of the subnet of the private endpoint"
   type        = string
   default     = null
 }

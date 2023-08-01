@@ -26,7 +26,7 @@ variable "enable_acr_private_endpoint" {
   default     = true
 }
 
-variable "acr_existing_private_dns_zone" {
+variable "existing_acr_private_dns_zone" {
   description = "The id of the existing private DNS Zone to use. If not set, the name will be generated using the `org_name`, `workload_name`, `deploy_environment` and `environment` variables."
   type        = string
   default     = null

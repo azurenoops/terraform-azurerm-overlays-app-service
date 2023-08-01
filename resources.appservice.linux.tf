@@ -11,7 +11,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
   name                = local.app_service_name
   resource_group_name = local.resource_group_name
   location            = local.location
-  service_plan_id     = azurerm_service_plan.asp.id
+  service_plan_id     = var.create_app_service_plan == false && var.existing_app_service_plan_name != null ? data.azurerm_service_plan.asp.0.id : azurerm_service_plan.asp.0.id
 
   site_config {
     always_on             = var.linux_app_site_config.always_on
@@ -20,8 +20,8 @@ resource "azurerm_linux_web_app" "linuxapp" {
     app_command_line      = var.linux_app_site_config.app_command_line
     application_stack {
       docker_image        = var.linux_app_site_config.application_stack.docker_image == null ? null : "${module.mod_container_registry.0.login_server}/${var.linux_app_site_config.application_stack.docker_image}"
-      docker_image_tag    = var.linux_app_site_config.application_stack.docker_image_tag
-      dotnet_version      = var.linux_app_site_config.application_stack.dotnet_version
+      docker_image_tag    = var.linux_app_site_config.application_stack.docker_image_tag == null ? null : var.linux_app_site_config.application_stack.docker_image_tag
+      dotnet_version      = var.linux_app_site_config.application_stack.dotnet_version == null ? null : var.linux_app_site_config.application_stack.dotnet_version
       go_version          = var.linux_app_site_config.application_stack.go_version
       java_server         = var.linux_app_site_config.application_stack.java_server
       java_server_version = var.linux_app_site_config.application_stack.java_server_version
@@ -31,8 +31,8 @@ resource "azurerm_linux_web_app" "linuxapp" {
       python_version      = var.linux_app_site_config.application_stack.python_version
       ruby_version        = var.linux_app_site_config.application_stack.ruby_version
     }
+    container_registry_use_managed_identity       = var.linux_function_app_site_config.container_registry_use_managed_identity == null ? false : var.linux_function_app_site_config.container_registry_use_managed_identity
     container_registry_managed_identity_client_id = var.linux_app_site_config.container_registry_use_managed_identity == true ? data.azurerm_user_assigned_identity.app_identity.principal_id : null
-    container_registry_use_managed_identity       = var.linux_app_site_config.container_registry_use_managed_identity
     cors {
       allowed_origins     = var.linux_app_site_config.cors == null ? null : var.linux_app_site_config.cors.allowed_origins
       support_credentials = var.linux_app_site_config.cors == null ? null : var.linux_app_site_config.cors.support_credentials

@@ -14,7 +14,7 @@ resource "azurerm_windows_function_app" "func" {
 
   storage_account_name       = module.mod_storage_account.0.storage_account_name
   storage_account_access_key = module.mod_storage_account.0.primary_access_key
-  service_plan_id            = azurerm_service_plan.asp.id
+  service_plan_id            = azurerm_service_plan.asp.0.id
 
   key_vault_reference_identity_id = data.azurerm_user_assigned_identity.app_identity.id
   site_config {
