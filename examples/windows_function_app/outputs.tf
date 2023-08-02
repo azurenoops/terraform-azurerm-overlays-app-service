@@ -1,3 +1,7 @@
 output "id" {
-  value = module.mod_app_service.app_service_linux_id
+  value = module.mod_app_service.windows_function_app_service_id
+}
+
+output "name" {
+  value = module.mod_app_service.windows_function_app_service_name
 }
