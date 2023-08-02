@@ -1,19 +1,23 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 resource "azurerm_linux_function_app" "func" {
   depends_on = [
     azurerm_service_plan.asp,
     azurerm_application_insights.app_service_app_insights,
-    module.overlays-storage-account
+    module.mod_storage_account
   ]
   count               = var.app_service_plan_os_type == "Linux" && var.app_service_resource_type == "FunctionApp" ? 1 : 0
   name                = local.app_service_name
   resource_group_name = local.resource_group_name
   location            = local.location
 
-  storage_account_name       = module.overlays-storage-account.0.storage_account_name
-  storage_account_access_key = data.azurerm_storage_account.sa.primary_access_key
-  service_plan_id            = data.azurerm_service_plan.asp.id
+  storage_account_name       = module.mod_storage_account.0.storage_account_name
+  storage_account_access_key = module.mod_storage_account.0.primary_access_key
+  service_plan_id            = azurerm_service_plan.asp.0.id
 
   key_vault_reference_identity_id = data.azurerm_user_assigned_identity.app_identity.id
+
   site_config {
     always_on                              = var.linux_function_app_site_config.always_on
     api_definition_url                     = var.linux_function_app_site_config.api_definition_url
@@ -22,6 +26,7 @@ resource "azurerm_linux_function_app" "func" {
     app_scale_limit                        = var.linux_function_app_site_config.app_scale_limit
     application_insights_connection_string = var.linux_function_app_site_config.application_insights_connection_string
     application_insights_key               = var.linux_function_app_site_config.application_insights_key
+
     application_stack {
       dynamic "docker" {
         for_each = var.linux_function_app_site_config.application_stack.docker == null ? [] : [1]
@@ -41,16 +46,21 @@ resource "azurerm_linux_function_app" "func" {
       powershell_core_version     = var.linux_function_app_site_config.application_stack.powershell_core_version
       use_custom_runtime          = var.linux_function_app_site_config.application_stack.use_custom_runtime
     }
+
     app_service_logs {
       disk_quota_mb         = var.linux_function_app_site_config.app_service_logs == null ? null : var.linux_function_app_site_config.app_service_logs.disk_quota_mb
       retention_period_days = var.linux_function_app_site_config.app_service_logs == null ? null : var.linux_function_app_site_config.app_service_logs.retention_period_days
     }
+
+    # Container settings
+    container_registry_use_managed_identity       = var.linux_function_app_site_config.container_registry_use_managed_identity == null ? false : var.linux_function_app_site_config.container_registry_use_managed_identity
     container_registry_managed_identity_client_id = var.linux_function_app_site_config.application_stack.docker == null ? null : "${module.mod_container_registry.login_server}/${var.linux_function_app_site_config.application_stack.docker_image}"
-    container_registry_use_managed_identity       = var.linux_function_app_site_config.container_registry_use_managed_identity
+
     cors {
       allowed_origins     = var.linux_function_app_site_config.cors == null ? null : var.linux_function_app_site_config.cors.allowed_origins
       support_credentials = var.linux_function_app_site_config.cors == null ? null : var.linux_function_app_site_config.cors.support_credentials
     }
+
     default_documents                 = var.linux_function_app_site_config.default_documents
     elastic_instance_minimum          = var.linux_function_app_site_config.elastic_instance_minimum
     ftps_state                        = var.linux_function_app_site_config.ftps_state
@@ -73,6 +83,7 @@ resource "azurerm_linux_function_app" "func" {
     worker_count                = var.linux_function_app_site_config.worker_count
 
   }
+
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.app_service_app_insights[0].instrumentation_key
     APPINSIGHTS_CONNECTION_STRING  = azurerm_application_insights.app_service_app_insights[0].connection_string
@@ -87,6 +98,7 @@ resource "azurerm_linux_function_app" "func" {
   }
   tags = merge(var.add_tags, local.default_tags)
 }
+
 resource "azurerm_linux_function_app_slot" "slot" {
   depends_on = [
     azurerm_linux_function_app.func
@@ -94,7 +106,7 @@ resource "azurerm_linux_function_app_slot" "slot" {
   count                = var.app_service_plan_os_type == "Linux" && var.app_service_resource_type == "FunctionApp" ? var.deployment_slot_count : 0
   name                 = "${local.app_service_name}-slot-${count.index + 1}"
   function_app_id      = azurerm_linux_function_app.func[0].id
-  storage_account_name = module.overlays-storage-account.0.storage_account_name
+  storage_account_name = module.mod_storage_account.0.storage_account_name
 
   site_config {}
 }

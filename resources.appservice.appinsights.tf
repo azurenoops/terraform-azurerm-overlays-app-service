@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 resource "azurerm_application_insights" "app_service_app_insights" {  
   count               = var.enable_application_insights ? 1 : 0
   location            = local.location
