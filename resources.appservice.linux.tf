@@ -31,7 +31,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
       python_version      = var.linux_app_site_config.application_stack.python_version
       ruby_version        = var.linux_app_site_config.application_stack.ruby_version
     }
-    container_registry_use_managed_identity       = var.linux_function_app_site_config.container_registry_use_managed_identity == null ? false : var.linux_function_app_site_config.container_registry_use_managed_identity
+    container_registry_use_managed_identity       = var.linux_app_site_config.container_registry_use_managed_identity == null ? false : var.linux_app_site_config.container_registry_use_managed_identity
     container_registry_managed_identity_client_id = var.linux_app_site_config.container_registry_use_managed_identity == true ? data.azurerm_user_assigned_identity.app_identity.principal_id : null
     cors {
       allowed_origins     = var.linux_app_site_config.cors == null ? null : var.linux_app_site_config.cors.allowed_origins

@@ -7,37 +7,37 @@
 
 output "windows_app_service_id" {
   description = "Id of the Windows App Service"
-  value       = var.app_service_plan_os_type == "Windows" && var.app_service_resource_type == "App" ? azurerm_windows_web_app.appService.0.id : null
+  value       = try(azurerm_windows_web_app.appService.0.id, null)
 }
 
 output "windows_app_service_name" {
   description = "Name of the Windows App Service"
-  value       = var.app_service_plan_os_type == "Windows" && var.app_service_resource_type == "App" ? azurerm_windows_web_app.appService.0.name : null
+  value       = try(azurerm_windows_web_app.appService.0.name, null)
 }
 
 output "windows_app_service_default_site_hostname" {
   description = "The Default Hostname associated with the Windows App Service"
-  value       = var.app_service_plan_os_type == "Windows" && var.app_service_resource_type == "App" ? azurerm_windows_web_app.appService.0.default_hostname : null
+  value       = try(azurerm_windows_web_app.appService.0.default_hostname, null)
 }
 
 output "windows_app_service_outbound_ip_addresses" {
   description = "Outbound IP adresses of the Windows App Service"
-  value       = split(",", azurerm_windows_web_app.appService.0.outbound_ip_addresses)
+  value       = try(split(",", azurerm_windows_web_app.appService.0.outbound_ip_addresses), null)
 }
 
 output "windows_app_service_possible_outbound_ip_addresses" {
   description = "Possible outbound IP adresses of the Windows App Service"
-  value       = split(",", azurerm_windows_web_app.appService.0.possible_outbound_ip_addresses)
+  value       = try(split(",", azurerm_windows_web_app.appService.0.possible_outbound_ip_addresses), null)
 }
 
 output "windows_app_service_site_credential" {
   description = "Site credential block of the Windows App Service"
-  value       = azurerm_windows_web_app.appService.0.site_credential
+  value       = try(azurerm_windows_web_app.appService.0.site_credential, null)
 }
 
 output "windows_app_service_identity_service_principal_id" {
   description = "Id of the Service principal identity of the Windows App Service"
-  value       = azurerm_windows_web_app.appService[0].identity[0].principal_id
+  value       = try(azurerm_windows_web_app.appService[0].identity[0].principal_id, null)
 }
 
 output "windows_app_service_slot_name" {
