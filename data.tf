@@ -21,4 +21,9 @@ data "azurerm_subnet" "pe_subnet" {
   resource_group_name  = local.resource_group_name
 }
 
+data "azurerm_service_plan" "existing_asp" {
+  count               = var.create_app_service_plan == false && var.existing_app_service_plan_name != null ? 1 : 0
+  name                = var.existing_app_service_plan_name
+  resource_group_name = local.resource_group_name
+}
 

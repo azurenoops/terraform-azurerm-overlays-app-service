@@ -11,7 +11,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
   name                = local.app_service_name
   resource_group_name = local.resource_group_name
   location            = local.location
-  service_plan_id     = var.create_app_service_plan == false && var.existing_app_service_plan_name != null ? var.existing_app_service_plan_name : azurerm_service_plan.asp.0.id
+  service_plan_id     = var.create_app_service_plan == false && var.existing_app_service_plan_name != null ? data.azurerm_service_plan.existing_asp.id : azurerm_service_plan.asp.0.id
 
   site_config {
     always_on             = var.linux_app_site_config.always_on
