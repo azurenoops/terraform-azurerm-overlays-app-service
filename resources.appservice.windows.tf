@@ -11,7 +11,7 @@ resource "azurerm_windows_web_app" "appService" {
   name                = local.app_service_name
   resource_group_name = local.resource_group_name
   location            = local.location
-  service_plan_id     = azurerm_service_plan.asp.0.id
+  service_plan_id     = var.create_app_service_plan == false && var.existing_app_service_plan_name != null ? var.existing_app_service_plan_name : azurerm_service_plan.asp.0.id
 
   key_vault_reference_identity_id = azurerm_user_assigned_identity.app_identity.id
   site_config {
