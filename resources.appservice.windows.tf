@@ -5,7 +5,7 @@ resource "azurerm_windows_web_app" "appService" {
   depends_on = [
     azurerm_service_plan.asp,
     azurerm_application_insights.app_service_app_insights,
-    data.azurerm_user_assigned_identity.app_identity
+    azurerm_user_assigned_identity.app_identity
   ]
   count               = var.app_service_plan_os_type == "Windows" && var.app_service_resource_type == "App" ? 1 : 0
   name                = local.app_service_name
@@ -13,7 +13,7 @@ resource "azurerm_windows_web_app" "appService" {
   location            = local.location
   service_plan_id     = azurerm_service_plan.asp.0.id
 
-  key_vault_reference_identity_id = data.azurerm_user_assigned_identity.app_identity.id
+  key_vault_reference_identity_id = azurerm_user_assigned_identity.app_identity.id
   site_config {
     always_on             = var.windows_app_site_config.always_on
     api_definition_url    = var.windows_app_site_config.api_definition_url
@@ -33,7 +33,7 @@ resource "azurerm_windows_web_app" "appService" {
       php_version                  = var.windows_app_site_config.application_stack.php_version
       python                       = var.windows_app_site_config.application_stack.python
     }
-    container_registry_managed_identity_client_id = var.windows_app_site_config.container_registry_use_managed_identity == true ? data.azurerm_user_assigned_identity.app_identity.principal_id : null
+    container_registry_managed_identity_client_id = var.windows_app_site_config.container_registry_use_managed_identity == true ? azurerm_user_assigned_identity.app_identity.principal_id : null
     container_registry_use_managed_identity       = var.windows_app_site_config.container_registry_use_managed_identity
     cors {
       allowed_origins     = var.windows_app_site_config.cors == null ? null : var.windows_app_site_config.cors.allowed_origins
@@ -70,7 +70,7 @@ resource "azurerm_windows_web_app" "appService" {
   identity {
     type = "UserAssigned"
     identity_ids = [
-      data.azurerm_user_assigned_identity.app_identity.id
+      azurerm_user_assigned_identity.app_identity.id
     ]
   }
   tags = merge(var.add_tags, local.default_tags)

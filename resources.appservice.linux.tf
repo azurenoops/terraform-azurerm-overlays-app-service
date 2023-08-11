@@ -5,7 +5,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
   depends_on = [
     azurerm_service_plan.asp,
     azurerm_application_insights.app_service_app_insights,
-    data.azurerm_user_assigned_identity.app_identity
+    azurerm_user_assigned_identity.app_identity
   ]
   count               = var.app_service_plan_os_type == "Linux" && var.app_service_resource_type == "App" ? 1 : 0
   name                = local.app_service_name
@@ -32,7 +32,7 @@ resource "azurerm_linux_web_app" "linuxapp" {
       ruby_version        = var.linux_app_site_config.application_stack.ruby_version
     }
     container_registry_use_managed_identity       = var.linux_app_site_config.container_registry_use_managed_identity == null ? false : var.linux_app_site_config.container_registry_use_managed_identity
-    container_registry_managed_identity_client_id = var.linux_app_site_config.container_registry_use_managed_identity == true ? data.azurerm_user_assigned_identity.app_identity.principal_id : null
+    container_registry_managed_identity_client_id = var.linux_app_site_config.container_registry_use_managed_identity == true ? azurerm_user_assigned_identity.app_identity.principal_id : null
     cors {
       allowed_origins     = var.linux_app_site_config.cors == null ? null : var.linux_app_site_config.cors.allowed_origins
       support_credentials = var.linux_app_site_config.cors == null ? null : var.linux_app_site_config.cors.support_credentials
