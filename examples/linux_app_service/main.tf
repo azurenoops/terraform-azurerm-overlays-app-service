@@ -53,8 +53,6 @@ module "mod_app_service" {
     websockets_enabled                      = false
   }
 
-  add_tags = {
-    foo = "bar"
-  }
+  add_tags = local.tags
 }
 
