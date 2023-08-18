@@ -16,7 +16,7 @@ resource "azurerm_windows_function_app" "func" {
   storage_account_access_key = module.mod_storage_account.0.primary_access_key
   service_plan_id            = azurerm_service_plan.asp.0.id
 
-  key_vault_reference_identity_id = data.azurerm_user_assigned_identity.app_identity.id
+  key_vault_reference_identity_id = azurerm_user_assigned_identity.app_identity.id
   site_config {
     always_on                              = var.windows_function_app_site_config.always_on
     api_definition_url                     = var.windows_function_app_site_config.api_definition_url
@@ -71,7 +71,7 @@ resource "azurerm_windows_function_app" "func" {
   identity {
     type = "UserAssigned"
     identity_ids = [
-      data.azurerm_user_assigned_identity.app_identity.id
+      azurerm_user_assigned_identity.app_identity.id
     ]
   }
   tags = merge(var.add_tags, local.default_tags)
